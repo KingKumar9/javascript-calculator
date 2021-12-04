@@ -14,8 +14,7 @@ const button = [
     { id: 'multiply', value: 'x' },
     { id: 'divide', value: '/' },
     { id: 'decimal', value: '.' },
-    { id: 'equals', value: '=' },
-    { id: 'clear', value: 'AC' }
+    { id: 'equals', value: '=' }
 ]
 
 export default button

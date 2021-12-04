@@ -9,6 +9,13 @@ class App extends React.Component {
       display: 0
     }
     this.numToDisplay = this.numToDisplay.bind(this)
+    this.clear = this.clear.bind(this)
+  }
+
+  clear() {
+    this.setState({
+      display: 0
+    })
   }
 
   numToDisplay(e) {
@@ -37,6 +44,7 @@ class App extends React.Component {
           </div>
           <div className="buttons">
             { buttons.map(i => { return <button onClick={ this.numToDisplay } id={ i.id }>{ i.value }</button> }) }
+            <button onClick={ this.clear } id="clear">AC</button>
           </div>
         </div>
       </div>
