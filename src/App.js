@@ -3,6 +3,7 @@ import React from 'react';
 import { numbers, operators } from './buttons.js';
 import './App.css';
 
+let regex = /[+*/]/
 
 class App extends React.Component {
   constructor(props) {
@@ -63,20 +64,9 @@ class App extends React.Component {
   opToDisplay(e) {
     const currValue = this.state.display
     const currValueStr = currValue.toString()
+    const lastLetter = currValueStr[currValueStr.length - 1]
     const value = e.target.innerText
-    if (currValueStr[currValueStr.length - 1] === '+') {
-      let newCurrValue = currValueStr.slice(0, -1)
-      this.setState({
-        display: newCurrValue + value,
-        decimal: false
-      })
-    } else if (currValueStr[currValueStr.length - 1] === '*') {
-      let newCurrValue = currValueStr.slice(0, -1)
-      this.setState({
-        display: newCurrValue + value,
-        decimal: false
-      })
-    } else if (currValueStr[currValueStr.length - 1] === '/') {
+    if (regex.test(lastLetter) && value !== '-') {
       let newCurrValue = currValueStr.slice(0, -1)
       this.setState({
         display: newCurrValue + value,
