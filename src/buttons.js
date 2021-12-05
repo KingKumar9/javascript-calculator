@@ -1,4 +1,4 @@
-const button = [
+const numbers = [
     { id: 'one', value: 1 },
     { id: 'two', value: 2 },
     { id: 'three', value: 3 },
@@ -8,13 +8,14 @@ const button = [
     { id: 'seven', value: 7 },
     { id: 'eight', value: 8 },
     { id: 'nine', value: 9 },
-    { id: 'zero', value: 0 },
-    { id: 'add', value: '+' },
-    { id: 'subtract', value: '-' },
-    { id: 'multiply', value: 'x' },
-    { id: 'divide', value: '/' },
-    { id: 'decimal', value: '.' },
-    { id: 'equals', value: '=' }
+    { id: 'zero', value: 0 }
 ]
 
-export default button
+const operators = [
+    { id: 'add', value: '+' },
+    { id: 'subtract', value: '-' },
+    { id: 'multiply', value: '*' },
+    { id: 'divide', value: '/' }
+]
+
+export { numbers, operators }
