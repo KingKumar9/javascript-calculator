@@ -13,7 +13,7 @@ const App = () => {
   const handleSubmit = () => {
     const total = eval(calculatorData);
     setInput(total);
-    setOutput(`${total} = ${total}`);
+    setOutput(total);
     setCalculatorData(`${total}`);
   };
 
@@ -22,7 +22,7 @@ const App = () => {
     setCalculatorData("");
   };
 
-  
+
   const handleNumbers = (value) => {
     if (!calculatorData.length) {
       setInput(`${value}`);
