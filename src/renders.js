@@ -1,6 +1,5 @@
 import { calcData } from './data.js'
 
-
 const Display = ({ input, output }) => (
     <div className="output">
         <span className="result">{output}</span>

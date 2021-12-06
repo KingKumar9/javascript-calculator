@@ -87,13 +87,13 @@ class App extends React.Component {
       this.setState({
         input: `${value}`
       })
-      const beforeLastChat = this.state.calcData.charAt(this.state.calcData.length - 2);
-      const beforeLastChatIsOperator = operators.includes(beforeLastChat) || beforeLastChat === "*";
+      const beforeLastChar = this.state.calcData.charAt(this.state.calcData.length - 2);
+      const beforeLastCharIsOperator = operators.includes(beforeLastChar) || beforeLastChar === "*";
       const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);    
       const lastCharIsOperator = operators.includes(lastChar) || lastChar === "*";      
       const validOp = value === "x" ? "*" : value;
-      if ((lastCharIsOperator && value !== "-") || (beforeLastChatIsOperator && lastCharIsOperator)) {
-        if (beforeLastChatIsOperator) {
+      if ((lastCharIsOperator && value !== "-") || (beforeLastCharIsOperator && lastCharIsOperator)) {
+        if (beforeLastCharIsOperator) {
           const updatedValue = `${this.state.calcData.substring(0, this.state.calcData.length - 2)}${value}`;
           this.setState({
             calcData: updatedValue
