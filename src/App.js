@@ -13,13 +13,20 @@ class App extends React.Component {
       output: '',
       calcData: ''
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClear = this.handleClear.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleNumbers = this.handleNumbers.bind(this)
     this.dotOperator = this.dotOperator.bind(this)
     this.handleOperators = this.handleOperators.bind(this)
     this.handleInput = this.handleInput.bind(this)
   }
+
+  handleClear = () => {
+    this.setState({
+      input: '0',
+      calcData: ''
+    })
+  };
 
   handleSubmit = () => {
     const total = eval(this.state.calcData);
@@ -27,13 +34,6 @@ class App extends React.Component {
       input: total,
       output: total,
       calcData: `${total}`
-    })
-  };
-
-  handleClear = () => {
-    this.setState({
-      input: '0',
-      calcData: ''
     })
   };
 
