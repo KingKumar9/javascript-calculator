@@ -5,124 +5,148 @@ import { operators, numbers } from './data.js'
 import { Display, Keyboard } from './renders.js'
 
 
-const App = () => {
-  const [input, setInput] = React.useState("0");
-  const [output, setOutput] = React.useState("");
-  const [calculatorData, setCalculatorData] = React.useState("");
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      input: '0',
+      output: '',
+      calcData: ''
+    }
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleClear = this.handleClear.bind(this)
+    this.handleNumbers = this.handleNumbers.bind(this)
+    this.dotOperator = this.dotOperator.bind(this)
+    this.handleOperators = this.handleOperators.bind(this)
+    this.handleInput = this.handleInput.bind(this)
+  }
 
-  const handleSubmit = () => {
-    const total = eval(calculatorData);
-    setInput(total);
-    setOutput(total);
-    setCalculatorData(`${total}`);
+  handleSubmit = () => {
+    const total = eval(this.state.calcData);
+    this.setState({
+      input: total,
+      output: total,
+      calcData: `${total}`
+    })
   };
 
-  const handleClear = () => {
-    setInput("0");
-    setCalculatorData("");
+  handleClear = () => {
+    this.setState({
+      input: '0',
+      calcData: ''
+    })
   };
 
 
-  const handleNumbers = (value) => {
-    if (!calculatorData.length) {
-      setInput(`${value}`);
-      setCalculatorData(`${value}`);
+  handleNumbers = (value) => {
+    if (!this.state.calcData.length) {
+      this.setState({
+        input: `${value}`,
+        calcData: `${value}`
+      })
     } else {
-      if (value === 0 && (calculatorData === "0" || input === "0")) {
+      if (value === 0 && (this.state.calcData === "0" || this.state.input === "0")) {
         return
       } else {
-        const lastChat = calculatorData.charAt(calculatorData.length - 1);
-        const isLastChatOperator = lastChat === "*" || operators.includes(lastChat);
-        setInput(isLastChatOperator ? `${value}` : `${input}${value}`);
-        setCalculatorData(`${calculatorData}${value}`);
+        const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);
+        const isLastChatOperator = lastChar === "*" || operators.includes(lastChar);
+        this.setState({
+          input: isLastChatOperator ? `${value}` : `${this.state.input}${value}`,
+          calcData: `${this.state.calcData}${value}`
+        })
       }
     }
   };
 
 
-  const dotOperator = () => {
-    const lastChat = calculatorData.charAt(calculatorData.length - 1);
-
-    if (!calculatorData.length) {
-      setInput("0.");
-      setCalculatorData("0.");
+  dotOperator = () => {
+    const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);
+    if (!this.state.calcData.length) {
+      this.setState({
+        input: "0.",
+        calcData: "0."
+      })
     } else {
-      if (lastChat === "*" || operators.includes(lastChat)) {
-        setInput("0.");
-        setCalculatorData(`${calculatorData} 0.`);
+      if (lastChar === "*" || operators.includes(lastChar)) {
+        this.setState({
+        input: "0.",
+        calcData: `${this.state.calcData} 0.`
+      })
       } else {
-        setInput(lastChat === "." || input.includes(".") ? `${input}` : `${input}.`);
-        setCalculatorData(lastChat === "." || input.includes(".") ? `${calculatorData}` : `${calculatorData}.`)}
+        this.setState({
+          input: lastChar === "." || this.state.input.includes(".") ? `${this.state.input}` : `${this.state.input}.`,
+          calcData: lastChar === "." || this.state.input.includes(".") ? `${this.state.calcData}` : `${this.state.calcData}.`
+        })
+      }
     }
   };
 
 
-  const handleOperators = (value) => {
-    if (calculatorData.length) {
-      setInput(`${value}`);
-      const beforeLastChat = calculatorData.charAt(calculatorData.length - 2);
+  handleOperators = (value) => {
+    if (this.state.calcData.length) {
+      this.setState({
+        input: `${value}`
+      })
+      const beforeLastChat = this.state.calcData.charAt(this.state.calcData.length - 2);
       const beforeLastChatIsOperator = operators.includes(beforeLastChat) || beforeLastChat === "*";
-      const lastChat = calculatorData.charAt(calculatorData.length - 1);    
-      const lastChatIsOperator = operators.includes(lastChat) || lastChat === "*";      
+      const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);    
+      const lastCharIsOperator = operators.includes(lastChar) || lastChar === "*";      
       const validOp = value === "x" ? "*" : value;
-
-      if ((lastChatIsOperator && value !== "-") || (beforeLastChatIsOperator && lastChatIsOperator)) {
+      if ((lastCharIsOperator && value !== "-") || (beforeLastChatIsOperator && lastCharIsOperator)) {
         if (beforeLastChatIsOperator) {
-          const updatedValue = `${calculatorData.substring(0, calculatorData.length - 2)}${value}`;
-          setCalculatorData(updatedValue);
+          const updatedValue = `${this.state.calcData.substring(0, this.state.calcData.length - 2)}${value}`;
+          this.setState({
+            calcData: updatedValue
+          })
         } else {
-          setCalculatorData(`${calculatorData.substring(0, calculatorData.length - 1)}${validOp}`);
+          this.setState({
+            calcData: `${this.state.calcData.substring(0, this.state.calcData.length - 1)}${validOp}`
+          })
         }
       } else {
-        setCalculatorData(`${calculatorData}${validOp}`);
+        this.setState({
+          calcData: `${this.state.calcData}${validOp}`
+        })
       }
     }
   };
 
 
-  const handleInput = (value) => {
+  handleInput = (value) => {
     const number = numbers.find((num) => num === value);
     const operator = operators.find((op) => op === value);
-
     switch (value) {
       case "=":
-        handleSubmit();
+        this.handleSubmit();
         break;
       case "AC":
-        handleClear();
+        this.handleClear();
         break;
       case number:
-        handleNumbers(value);
+        this.handleNumbers(value);
         break;
       case ".":
-        dotOperator(value);
+        this.dotOperator(value);
         break;
       case operator:
-        handleOperators(value);
+        this.handleOperators(value);
         break;
       default:
         break;
     }
-  };
+  }
 
 
-  const handleOutput = () => {
-    setOutput(calculatorData);
-  };
-
-  React.useEffect(() => {
-    handleOutput();
-  });
-
-
-  return (
-    <div className="container">
-      <div className="calculator">
-        <Display input={input} output={output} />
-        <Keyboard handleInput={handleInput} />
-      </div>
+  render() {
+    return (
+      <div className="container">
+        <div className="calculator">
+          <Display input={this.state.input} output={this.state.output} />
+          <Keyboard handleInput={this.handleInput} />
+        </div>
     </div>
-  );
+    )
+  }
 }
 
 
