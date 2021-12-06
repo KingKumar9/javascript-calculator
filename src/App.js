@@ -10,7 +10,6 @@ class App extends React.Component {
     super(props)
     this.state = {
       input: '0',
-      output: '',
       calcData: ''
     }
     this.handleClear = this.handleClear.bind(this)
@@ -32,7 +31,6 @@ class App extends React.Component {
     const total = eval(this.state.calcData);
     this.setState({
       input: total,
-      output: total,
       calcData: `${total}`
     })
   };
@@ -141,7 +139,7 @@ class App extends React.Component {
     return (
       <div className="container">
         <div className="calculator">
-          <Display input={this.state.input} output={this.state.output} />
+          <Display input={this.state.input} />
           <Keyboard handleInput={this.handleInput} />
         </div>
     </div>

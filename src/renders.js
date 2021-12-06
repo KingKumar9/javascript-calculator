@@ -1,8 +1,7 @@
 import { calcData } from './data.js'
 
-const Display = ({ input, output }) => (
+const Display = ({ input }) => (
     <div className="output">
-        <span className="result">{output}</span>
         <span id="display" className="input">{input}</span>
     </div>
 );
