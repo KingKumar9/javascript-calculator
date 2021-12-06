@@ -1,103 +1,129 @@
 /* eslint-disable no-eval */
 import React from 'react';
-import { numbers, operators } from './buttons.js';
 import './App.css';
+import { operators, numbers } from './data.js'
+import { Display, Keyboard } from './renders.js'
 
-let regex = /[+*/]/
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      display: 0,
-      decimal: false
-    }
-    this.numToDisplay = this.numToDisplay.bind(this)
-    this.opToDisplay = this.opToDisplay.bind(this)
-    this.clear = this.clear.bind(this)
-    this.calculate = this.calculate.bind(this)
-    this.decimal = this.decimal.bind(this)
-  }
+const App = () => {
+  const [input, setInput] = React.useState("0");
+  const [output, setOutput] = React.useState("");
+  const [calculatorData, setCalculatorData] = React.useState("");
 
-  clear() {
-    this.setState({
-      display: 0,
-      decimal: false
-    })
-  }
+  const handleSubmit = () => {
+    const total = eval(calculatorData);
+    setInput(total);
+    setOutput(`${total} = ${total}`);
+    setCalculatorData(`${total}`);
+  };
 
-  calculate() {
-    const expression = this.state.display
-    const answer = eval(expression)
-    this.setState({
-      display: answer
-    })
-  }
+  const handleClear = () => {
+    setInput("0");
+    setCalculatorData("");
+  };
 
-  decimal(e) {
-    if (!this.state.decimal) {
-      this.setState({
-        display: this.state.display + e.target.innerText,
-        decimal: true
-      })
-    }
-  }
-
-  numToDisplay(e) {
-    const currValue = this.state.display
-    const value = e.target.innerText
-    if (currValue === 0 && parseInt(value) === 0) {
-      this.setState({
-        display: 0
-      })
-    } else if (currValue === 0) {
-      this.setState({
-        display: value
-      })
+  
+  const handleNumbers = (value) => {
+    if (!calculatorData.length) {
+      setInput(`${value}`);
+      setCalculatorData(`${value}`);
     } else {
-      this.setState({
-        display: currValue + value
-      })
+      if (value === 0 && (calculatorData === "0" || input === "0")) {
+        return
+      } else {
+        const lastChat = calculatorData.charAt(calculatorData.length - 1);
+        const isLastChatOperator = lastChat === "*" || operators.includes(lastChat);
+        setInput(isLastChatOperator ? `${value}` : `${input}${value}`);
+        setCalculatorData(`${calculatorData}${value}`);
+      }
     }
-  }
+  };
 
-  opToDisplay(e) {
-    const currValue = this.state.display
-    const currValueStr = currValue.toString()
-    const lastLetter = currValueStr[currValueStr.length - 1]
-    const value = e.target.innerText
-    if (regex.test(lastLetter) && value !== '-') {
-      let newCurrValue = currValueStr.slice(0, -1)
-      this.setState({
-        display: newCurrValue + value,
-        decimal: false
-      })
+
+  const dotOperator = () => {
+    const lastChat = calculatorData.charAt(calculatorData.length - 1);
+
+    if (!calculatorData.length) {
+      setInput("0.");
+      setCalculatorData("0.");
     } else {
-      this.setState({
-        display: currValue + value,
-        decimal: false
-      })
+      if (lastChat === "*" || operators.includes(lastChat)) {
+        setInput("0.");
+        setCalculatorData(`${calculatorData} 0.`);
+      } else {
+        setInput(lastChat === "." || input.includes(".") ? `${input}` : `${input}.`);
+        setCalculatorData(lastChat === "." || input.includes(".") ? `${calculatorData}` : `${calculatorData}.`)}
     }
-  }
+  };
 
-  render() {
-    return (
-      <div className="container">
-        <div className="calculator">
-          <div id="display">
-            <h2 className="equation">{ this.state.display }</h2>
-          </div>
-          <div className="buttons">
-            { numbers.map(i => { return <button onClick={ this.numToDisplay } id={ i.id }>{ i.value }</button> }) }
-            { operators.map(i => { return <button onClick={ this.opToDisplay } id={ i.id }>{ i.value }</button> }) }
-            <button onClick={ this.decimal } id="decimal">.</button>
-            <button onClick={ this.calculate } id="equals">=</button>
-            <button onClick={ this.clear } id="clear">AC</button>
-          </div>
-        </div>
+
+  const handleOperators = (value) => {
+    if (calculatorData.length) {
+      setInput(`${value}`);
+      const beforeLastChat = calculatorData.charAt(calculatorData.length - 2);
+      const beforeLastChatIsOperator = operators.includes(beforeLastChat) || beforeLastChat === "*";
+      const lastChat = calculatorData.charAt(calculatorData.length - 1);    
+      const lastChatIsOperator = operators.includes(lastChat) || lastChat === "*";      
+      const validOp = value === "x" ? "*" : value;
+
+      if ((lastChatIsOperator && value !== "-") || (beforeLastChatIsOperator && lastChatIsOperator)) {
+        if (beforeLastChatIsOperator) {
+          const updatedValue = `${calculatorData.substring(0, calculatorData.length - 2)}${value}`;
+          setCalculatorData(updatedValue);
+        } else {
+          setCalculatorData(`${calculatorData.substring(0, calculatorData.length - 1)}${validOp}`);
+        }
+      } else {
+        setCalculatorData(`${calculatorData}${validOp}`);
+      }
+    }
+  };
+
+
+  const handleInput = (value) => {
+    const number = numbers.find((num) => num === value);
+    const operator = operators.find((op) => op === value);
+
+    switch (value) {
+      case "=":
+        handleSubmit();
+        break;
+      case "AC":
+        handleClear();
+        break;
+      case number:
+        handleNumbers(value);
+        break;
+      case ".":
+        dotOperator(value);
+        break;
+      case operator:
+        handleOperators(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+
+  const handleOutput = () => {
+    setOutput(calculatorData);
+  };
+
+  React.useEffect(() => {
+    handleOutput();
+  });
+
+
+  return (
+    <div className="container">
+      <div className="calculator">
+        <Display input={input} output={output} />
+        <Keyboard handleInput={handleInput} />
       </div>
-    )
-  }
+    </div>
+  );
 }
+
 
 export default App;
