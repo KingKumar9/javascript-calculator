@@ -42,19 +42,17 @@ class App extends React.Component {
         input: `${value}`,
         calcData: `${value}`
       })
+    } else if (value === 0 && (this.state.calcData === "0" || this.state.input === "0")) {
+      return
     } else {
-      if (value === 0 && (this.state.calcData === "0" || this.state.input === "0")) {
-        return
-      } else {
-        const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);
-        const isLastChatOperator = lastChar === "*" || operators.includes(lastChar);
-        this.setState({
-          input: isLastChatOperator ? `${value}` : `${this.state.input}${value}`,
-          calcData: `${this.state.calcData}${value}`
-        })
-      }
+      const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);
+      const isLastChatOperator = lastChar === "*" || operators.includes(lastChar);
+      this.setState({
+        input: isLastChatOperator ? `${value}` : `${this.state.input}${value}`,
+        calcData: `${this.state.calcData}${value}`
+      })
     }
-  };
+  }
 
 
   dotOperator = () => {
@@ -64,19 +62,17 @@ class App extends React.Component {
         input: "0.",
         calcData: "0."
       })
-    } else {
-      if (lastChar === "*" || operators.includes(lastChar)) {
-        this.setState({
+    } else if (lastChar === "*" || operators.includes(lastChar)) {
+      this.setState({
         input: "0.",
         calcData: `${this.state.calcData} 0.`
       })
-      } else {
+    } else {
         this.setState({
           input: lastChar === "." || this.state.input.includes(".") ? `${this.state.input}` : `${this.state.input}.`,
           calcData: lastChar === "." || this.state.input.includes(".") ? `${this.state.calcData}` : `${this.state.calcData}.`
         })
       }
-    }
   };
 
 
