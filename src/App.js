@@ -13,6 +13,7 @@ class App extends React.Component {
       calcData: ''
     }
     this.handleClear = this.handleClear.bind(this)
+    this.delete = this.delete.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleNumbers = this.handleNumbers.bind(this)
     this.dotOperator = this.dotOperator.bind(this)
@@ -25,7 +26,22 @@ class App extends React.Component {
       input: '0',
       calcData: ''
     })
+    document.getElementById('delete').disabled = false;
   };
+
+  delete = () => {
+    if (this.state.input.length === 1) {
+      this.setState({
+        input: '0',
+        calcData: `${this.state.calcData.substring(0, this.state.calcData.length - 1)}`
+      })
+    } else {
+      this.setState({
+        input: `${this.state.input.substring(0, this.state.input.length - 1)}`,
+        calcData: `${this.state.calcData.substring(0, this.state.calcData.length - 1)}`
+      })
+    }
+  }
 
   handleSubmit = () => {
     const total = eval(this.state.calcData);
@@ -33,10 +49,12 @@ class App extends React.Component {
       input: total,
       calcData: `${total}`
     })
+    document.getElementById('delete').disabled = true;
   };
 
 
   handleNumbers = (value) => {
+    document.getElementById('delete').disabled = false;
     if (!this.state.calcData.length) {
       this.setState({
         input: `${value}`,
@@ -56,6 +74,7 @@ class App extends React.Component {
 
 
   dotOperator = () => {
+    document.getElementById('delete').disabled = false;
     const lastChar = this.state.calcData.charAt(this.state.calcData.length - 1);
     if (!this.state.calcData.length) {
       this.setState({
@@ -77,6 +96,7 @@ class App extends React.Component {
 
 
   handleOperators = (value) => {
+    document.getElementById('delete').disabled = false;
     if (this.state.calcData.length) {
       this.setState({
         input: `${value}`
@@ -116,6 +136,9 @@ class App extends React.Component {
       case "AC":
         this.handleClear();
         break;
+      case "<":
+        this.delete();
+        break;
       case number:
         this.handleNumbers(value);
         break;
@@ -135,7 +158,7 @@ class App extends React.Component {
     return (
       <div className="container">
         <div className="calculator">
-          <Display input={this.state.input} />
+          <Display input={this.state.input} output={this.state.calcData}/>
           <Keyboard handleInput={this.handleInput} />
         </div>
     </div>

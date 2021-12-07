@@ -1,5 +1,6 @@
 const calcData = [
     { id: "clear", value: "AC" },
+    { id: "delete", value: "<" },
     { id: "divide", value: "/" },
     { id: "multiply", value: "x" },
     { id: "seven", value: 7 },
